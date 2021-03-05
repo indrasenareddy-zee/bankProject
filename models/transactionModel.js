@@ -17,6 +17,9 @@ const Transaction = db.define('transactions',{
     },
     content:{
         type: Sequelize.STRING
+    },
+    CreditedTo:{
+        type:Sequelize.STRING
     }
 })
 

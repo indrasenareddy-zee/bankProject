@@ -1,0 +1,102 @@
+{
+    "AUTHORIZATION_HEADER": {
+        "status":401,
+        "error_code": 1000,
+        "message": "Authorization header not present"
+    },
+    "BEARER_NOT_FOUND": {
+        "status":401,
+        "error_code": 1001,
+        "message": "Bearer not present for JWT Token"
+    },
+    "ILLEGAL_JWT_TOKEN": {
+        "status":401,
+        "error_code": 1002,
+        "message": "Illegal JWT Token or Bearer not present"
+    },
+    "BAD_REQUEST": {
+        "status":400,
+        "error_code": 1003,
+        "message": "Required fields missing"
+    },
+    "SERVER_ERROR": {
+        "status":500,
+        "error_code": 1004,
+        "message": "Server Error"
+    },
+    "DATA_NOT_FOUND": {
+        "status":404,
+        "error_code": 1005,
+        "message": "No Data Found"
+    },
+    "NO_ROOMS_DATA":{
+        "status":400,
+        "error_code":1006,
+        "message":"Invalid Request, no rooms data found"
+    },
+    "INVALID_DATE_INPUT":{
+        "status":400,
+        "error_code":1007,
+        "message":"Invalid Request, Start Date cannot be more than End Date"
+    },
+    "NUM_EXCEED":{
+        "status":400,
+        "error_code":1008,
+        "message":"Invalid Request, a room cannot have more than 4 occupants"
+    },
+    "VOYAGE_EMPTY":{
+        "status":400,
+        "error_code":1009,
+        "message":"Invalid Request, Please pass the voyageId"
+    },
+    "CATEGORY_EMPTY":{
+        "status":400,
+        "error_code":1010,
+        "message":"Invalid Request, Please pass the voyageId"
+    },
+    "START_DATE_EROOR":{
+        "status":400,
+        "error_code":1011,
+        "message":"Start date should be greater then todays date"
+    },
+    "INVALID_VOYAGE":{
+        "status":400,
+        "error_code":1012,
+        "message":"Invalid Voyage or Expired Voayge"
+    },
+    "APIKEY_HEADER": {
+        "status":401,
+        "error_code": 1013,
+        "message": "Api key header not present"
+    },
+    "APIKEY_NOT_FOUND": {
+        "status":401,
+        "error_code": 1014,
+        "message": "Api key not found, Please try using other api key"
+    },
+    "BALCANY_LIMIT": {
+        "status":401,
+        "error_code": 1014,
+        "message": "Maximum 3 people can select on Balcony categ=2"
+    },
+    "CABIN_NOT_AVAILABLE": {
+        "status":401,
+        "error_code": 1014,
+        "message": "Can not select this cabin"
+    },
+    "OFFER_EXPIRED":{
+        "status":400,
+        "error_code":1015,
+        "message":"Invalid Request, this offer is expired "
+    },
+    "INVALID_VOYAGEID":{
+        "status":400,
+        "error_code":1016,
+        "message":"This is offer is not valid for the voyage you selected"
+    },
+    "APIKEY_DEACTIVATED":{
+        "status":401,
+        "error_code":1017,
+        "message":"API Key is Deactivated "
+    }
+}

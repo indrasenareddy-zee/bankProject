@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize")
 const db = require("../config/db")
-
+const Transaction = require("./transactionModel")
 const User = db.define('users',{
     id:{
         type:Sequelize.DataTypes.UUID,
@@ -22,7 +22,7 @@ const User = db.define('users',{
     },
     phone:{
         allowNull:false,
-        type:Sequelize.INTEGER,
+        type:Sequelize.BIGINT,
         unique:true
     },
     password:{
@@ -38,4 +38,5 @@ type:Sequelize.STRING
     }
 })
 
+Transaction.belongsTo(User)
 module.exports = User
