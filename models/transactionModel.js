@@ -19,7 +19,7 @@ const Transaction = db.define('transactions',{
         type: Sequelize.STRING
     },
     CreditedTo:{
-        type:Sequelize.STRING
+        type:Sequelize.BIGINT
     }
 })
 

@@ -18,16 +18,19 @@ if(!validator.isEmail(email) || !validation.passwordValidate(password)){
      //check user already exists
      var user = await User.findOne({
         where:{ phone:req.body.phone}})
-     console.log(user)
      if(user){
          return res.status(409).json({msg:"user already registered"})
      }
+     var accountNumber =await generateAccountNumber()
+     console.log(accountNumber)
      var password = await bcrypt.hash(req.body.password,10)
+    
      var user ={
          email:email,
          firstName:firstName,
          lastName:lastName,
          phone:phone,
+         accountNumber:accountNumber,
          password:password
              }
              console.log(user)
@@ -57,4 +60,19 @@ if(!validator.isEmail(email) || !validation.passwordValidate(password)){
    })
    console.log(user)
     return res.status(200).json(user)
+   }
+
+
+   async function generateAccountNumber(){
+       console.log("here")
+    var accountNumber = `${Math.floor(Math.random() * 1000)}`+`${Date.now()}`
+    var data = await User.findOne({
+        where:{accountNumber:accountNumber}
+    })
+    console.log("data",data)
+    if(data){
+        return generateAccountNumber()
+    }else{
+        return accountNumber
+    }
    }

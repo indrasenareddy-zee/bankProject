@@ -11,8 +11,7 @@ var PORT = process.env.PORT || 3089
 app.use("/auth",authRoute)
 app.use("/user",auth,userRoute)
 
-connection.sync({
-}).then(()=>{
+connection.sync({}).then(()=>{
     console.log("sql connection established")
     app.listen(PORT,(req,res)=>{
         console.log(`runnign on ${PORT}`)

@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize")
+const { validate } = require("../config/db")
 const db = require("../config/db")
 const Transaction = require("./transactionModel")
 const User = db.define('users',{
@@ -35,8 +36,17 @@ type:Sequelize.STRING
     amountBalance:{
         type:Sequelize.INTEGER,
         defaultValue:0
-    }
+    },
+    pin:{
+    type:Sequelize.STRING
+},
+accountNumber:{
+    type:Sequelize.BIGINT,
+    allowNull:false,
+    unique:true
+}
 })
 
 Transaction.belongsTo(User)
+// User.hasMany(Transaction)
 module.exports = User
