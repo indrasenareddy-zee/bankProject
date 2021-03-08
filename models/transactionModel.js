@@ -20,6 +20,9 @@ const Transaction = db.define('transactions',{
     },
     CreditedTo:{
         type:Sequelize.BIGINT
+    },
+    debitedFrom:{
+        type:Sequelize.BIGINT
     }
 })
 

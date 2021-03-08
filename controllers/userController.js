@@ -1,9 +1,14 @@
 var jwt = require("jsonwebtoken")
 var bcrypt = require("bcrypt")
 const db = require("../config/db")
+const { Op } = require("sequelize");
+
 var CryptoJS = require("crypto-js");
 var Transaction = require("../models/transactionModel")
 var User = require("../models/userModel");
+// var Sequelize = require('sequelize');
+const TIMESTAMP = require('sequelize-mysql-timestamp');
+const { sequelize } = require("../models/transactionModel");
 exports.checkBalance = async(req,res) => {
     console.log("user",req.user)
 return res.status(200).json({balance:req.user.amountBalance})
@@ -21,13 +26,13 @@ exports.doTransaction = async(req,res) => {
     if(req.body.accountNumber == req.user.accountNumber){
         return res.status(400).json("you cannot transfer money to your account")
     }
-  var user = await User.findOne({
+  var credit_user = await User.findOne({
      where:{ accountNumber:req.body.accountNumber}})
-     if(!user){
+     if(!credit_user){
         return res.status(400).json({msg:"Account Number incorrect"})
      }
-     await user.update({
-         amountBalance:user.amountBalance + req.body.amount
+     await credit_user.update({
+         amountBalance:credit_user.amountBalance + req.body.amount
      })
      await req.user.update({
          amountBalance:req.user.amountBalance-req.body.amount
@@ -35,7 +40,8 @@ exports.doTransaction = async(req,res) => {
      var transaction = {
          amount:req.body.amount,
          transactionStatus:"success",
-         CreditedTo:user.accountNumber,
+         CreditedTo:credit_user.accountNumber,
+         debitedFrom:req.user.accountNumber,
          content:req.body.content,
          userId:req.user.id
      }
@@ -61,4 +67,30 @@ exports.generatePin = async(req,res)=>{
 
 }
 
+exports.lastTenTransactions = async(req,res)=>{
+var transactions = await Transaction.findAll({
+    // where:{
+    //    [Op.or]:[
+    //        {CreditedTo:req.user.accountNumber},
+    //        {debitedFrom:req.user.accountNumber}
+    //    ]
+    // } ,
+    where:{
+        [Op.or]:[
+{CreditedTo:req.user.accountNumber},
+ {debitedFrom:req.user.accountNumber}
+        ],
+         createdAt:{
+            [Op.between]:['2021-03-07','2021-03-09']
+            }
+        
+    },
+    order:[
+        ['createdAt','DESC']
+    ],
+})
 
+
+
+return res.status(200).json({userid:req.user.id,lenght:transactions.length, transactions})
+}
