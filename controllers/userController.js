@@ -15,8 +15,6 @@ return res.status(200).json({balance:req.user.amountBalance})
 }
 
 exports.doTransaction = async(req,res) => {
-    console.log(req.body)
-    console.log(req.user.amountBalance)
     if(req.user.amountBalance < req.body.amount){
         return res.status(400).json({msg:"insufficient funds"})
     }
@@ -26,10 +24,21 @@ exports.doTransaction = async(req,res) => {
     if(req.body.accountNumber == req.user.accountNumber){
         return res.status(400).json("you cannot transfer money to your account")
     }
+
   var credit_user = await User.findOne({
      where:{ accountNumber:req.body.accountNumber}})
      if(!credit_user){
         return res.status(400).json({msg:"Account Number incorrect"})
+     }
+     if(!req.body.pin){
+        return res.status(400).json({msg:"Please enter pin"})
+     }
+     console.log(req.user.pin)
+     var bytes  = CryptoJS.AES.decrypt(req.user.pin,'secretforpin');
+     var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    console.log("orignal",originalText)
+     if(originalText != req.body.pin){
+         return res.status(400).json({msg:"pin mismatch"})
      }
      await credit_user.update({
          amountBalance:credit_user.amountBalance + req.body.amount
@@ -58,23 +67,18 @@ exports.getMyProfile = async(req,res)=>{
 
 exports.generatePin = async(req,res)=>{
     var secretPin = CryptoJS.AES.encrypt(`${req.body.pin}`, 'secretforpin').toString();
-    console.log(secretPin)
+    console.log("secretpin",secretPin)
     var user = await User.findByPk(req.user.id)
     await user.update({
         pin:secretPin
     })
-    return res.status(200).json(req.user)
+    
+    return res.status(200).json(user)
 
 }
 
 exports.lastTenTransactions = async(req,res)=>{
 var transactions = await Transaction.findAll({
-    // where:{
-    //    [Op.or]:[
-    //        {CreditedTo:req.user.accountNumber},
-    //        {debitedFrom:req.user.accountNumber}
-    //    ]
-    // } ,
     where:{
         [Op.or]:[
 {CreditedTo:req.user.accountNumber},
@@ -83,13 +87,11 @@ var transactions = await Transaction.findAll({
          createdAt:{
             [Op.between]:['2021-03-07','2021-03-09']
             }
-        
     },
     order:[
         ['createdAt','DESC']
     ],
 })
-
 
 
 return res.status(200).json({userid:req.user.id,lenght:transactions.length, transactions})
