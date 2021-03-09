@@ -14,6 +14,7 @@ exports.checkBalance = async(req,res) => {
 return res.status(200).json({balance:req.user.amountBalance})
 }
 
+
 exports.doTransaction = async(req,res) => {
     if(req.user.amountBalance < req.body.amount){
         return res.status(400).json({msg:"insufficient funds"})

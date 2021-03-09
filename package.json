@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "dev": "nodemon ./server.js localhost 3000",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
@@ -20,5 +21,8 @@
     "sequelize": "^6.5.0",
     "sequelize-mysql-timestamp": "^1.4.0",
     "validator": "^13.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

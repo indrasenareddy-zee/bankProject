@@ -2,7 +2,7 @@ var User = require("../models/userModel")
 var bcrypt = require("bcrypt")
 var jwt = require("jsonwebtoken")
 var validator = require('validator');
-var errors = require("../errorFiles/errorCodes.json")
+var errors = require("../errorfiles/errorCodes.json")
 
 var validation = require("../validations/userValidation")
 //signup

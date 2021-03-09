@@ -7,7 +7,7 @@ var authRoute = require("./routes/authRoute")
 var userRoute = require("./routes/userRoute")
 var app = express()
 app.use(bodyParser.json())
-var PORT = process.env.PORT || 3089
+var PORT = process.env.PORT || 3000
 app.use("/auth",authRoute)
 app.use("/user",auth,userRoute)
 
