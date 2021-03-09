@@ -54,9 +54,11 @@ if(!validator.isEmail(email) || !validation.passwordValidate(password)){
     if(!matchPassword){
        return res.status(401).json({msg:"invalid credentials"})
     }
-    var token = await jwt.sign({username:user.username,id:user.id},'jwtsecret',{expiresIn:"1h"})
-   await user.update({
-       token :token
+    var token = await jwt.sign({username:user.username,email:user.email,id:user.id},'jwtsecret',{expiresIn:"1m"})
+   var refreshToken = await jwt.sign({username:user.username,email:user.email,id:user.id},'jwtsecret',{expiresIn:"5m"})
+    await user.update({
+       token :token,
+       refreshToken:refreshToken
    })
    console.log(user)
     return res.status(200).json(user)

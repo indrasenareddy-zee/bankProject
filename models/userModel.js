@@ -33,6 +33,9 @@ type:Sequelize.STRING
     token:{
         type:Sequelize.STRING
     },
+    refreshToken:{
+        type:Sequelize.STRING
+    },
     amountBalance:{
         type:Sequelize.INTEGER,
         defaultValue:0
