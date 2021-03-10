@@ -1,15 +1,31 @@
 const jwt = require("jsonwebtoken");
-var User = require("../models/userModel")
+var db = require("../config/db")
+var Op = require("sequelize")
 var validation = require("../errorfiles/errorCodes.json")
 exports.auth = async(req,res,next)=>{
-    console.log("hader",req.headers)
     if( !req.headers || !req.headers.authorization || !req.headers.refreshtoken){
         return res.status(401).json(validation.AUTHORIZATION_HEADER)
     }
-    
     const token = req.headers.authorization.split(' ')[1];
     var decoded;
-    console.log(token)
+  console.log(req.headers.refreshtoken)
+    var tokenfound = await db.users.findOne({
+        where:{
+            token:token,
+            refreshToken:req.headers.refreshtoken
+        }
+    })
+    // console.log("...jjjjjjjjjjjjjjjjjjjj",tokenfound)
+    // if(tokenfound){
+    //     console.log("jddddddddddddddddd")
+    // }else{
+    //     console.log("zzzzzzzzzzzzzzzzzzz")
+    // }
+
+    if(!tokenfound){
+        return res.status(401).json(validation.AUTHORIZATION_HEADER)
+
+    }
     await jwt.verify(token,"jwtsecret",async (err,resp)=>{
         console.log(resp)
         if (err){
@@ -21,7 +37,7 @@ exports.auth = async(req,res,next)=>{
                 if(err){
                     return res.status(401).json(validation.ILLEGAL_JWT_TOKEN)
                 }else{
-                    var user = await User.findOne({
+                    var user = await db.users.findOne({
                         where:{id:response.id}
                     })
                     var token = await jwt.sign({username:user.username,email:user.email,id:user.id},'jwtsecret',{expiresIn:"1m"})
@@ -29,7 +45,7 @@ exports.auth = async(req,res,next)=>{
                     token:token
                 })
                 decoded = user
-    req.user = await User.findByPk(decoded.id)
+    req.user = await db.users.findByPk(decoded.id)
     next()
                 }
                 })
@@ -39,7 +55,7 @@ exports.auth = async(req,res,next)=>{
 }else{
     console.log("direct")
     decoded = resp
-    req.user = await User.findByPk(decoded.id)
+    req.user = await db.users.findByPk(decoded.id)
     next()
 }
     })

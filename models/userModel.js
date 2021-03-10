@@ -1,55 +1,58 @@
-const Sequelize = require("sequelize")
-const { validate } = require("../config/db")
-const db = require("../config/db")
-const Transaction = require("./transactionModel")
-const User = db.define('users',{
-    id:{
-        type:Sequelize.DataTypes.UUID,
-        primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
-    },
-    email:{
-        allowNull:false,
-        type:Sequelize.STRING,
-        unique:true
-    },
-    firstName:{
-        allowNull:false,
-        type:Sequelize.STRING
-    },
-    lastName:{
-        allowNull:false,
-        type:Sequelize.STRING
-    },
-    phone:{
-        allowNull:false,
-        type:Sequelize.BIGINT,
-        unique:true
-    },
-    password:{
-        allowNull:false,
-type:Sequelize.STRING
-    },
-    token:{
-        type:Sequelize.STRING
-    },
-    refreshToken:{
-        type:Sequelize.STRING
-    },
-    amountBalance:{
-        type:Sequelize.INTEGER,
-        defaultValue:0
-    },
-    pin:{
-    type:Sequelize.STRING
-},
-accountNumber:{
-    type:Sequelize.BIGINT,
-    allowNull:false,
-    unique:true
-}
-})
+'use strict'
 
-Transaction.belongsTo(User)
+module.exports = (sequelize,DataTypes) =>{
+    const User = sequelize.define('users',{
+        id:{
+            type:DataTypes.UUID,
+            primaryKey:true,
+            defaultValue:DataTypes.UUIDV4
+        },
+        email:{
+            allowNull:false,
+            type:DataTypes.STRING,
+            unique:true
+        },
+        firstName:{
+            allowNull:false,
+            type:DataTypes.STRING
+        },
+        lastName:{
+            allowNull:false,
+            type:DataTypes.STRING
+        },
+        phone:{
+            allowNull:false,
+            type:DataTypes.BIGINT,
+            unique:true
+        },
+        password:{
+            allowNull:false,
+    type:DataTypes.STRING
+        },
+        token:{
+            type:DataTypes.STRING
+        },
+        refreshToken:{
+            type:DataTypes.STRING
+        },
+        amountBalance:{
+            type:DataTypes.INTEGER,
+            defaultValue:0
+        },
+        pin:{
+        type:DataTypes.STRING
+    },
+    accountNumber:{
+        type:DataTypes.BIGINT,
+        allowNull:false,
+        unique:true
+    }
+    })
+    return User;
+}
+
+
+
+// Transaction.belongsTo(User)
 // User.hasMany(Transaction)
-module.exports = User
+// module.exports = User

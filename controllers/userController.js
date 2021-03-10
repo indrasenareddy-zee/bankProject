@@ -2,7 +2,7 @@ var jwt = require("jsonwebtoken")
 var bcrypt = require("bcrypt")
 const db = require("../config/db")
 const { Op } = require("sequelize");
-
+var firstMail = require("nodemailer")
 var CryptoJS = require("crypto-js");
 var Transaction = require("../models/transactionModel")
 var User = require("../models/userModel");
@@ -26,7 +26,7 @@ exports.doTransaction = async(req,res) => {
         return res.status(400).json("you cannot transfer money to your account")
     }
 
-  var credit_user = await User.findOne({
+  var credit_user = await db.users.findOne({
      where:{ accountNumber:req.body.accountNumber}})
      if(!credit_user){
         return res.status(400).json({msg:"Account Number incorrect"})
@@ -41,12 +41,10 @@ exports.doTransaction = async(req,res) => {
      if(originalText != req.body.pin){
          return res.status(400).json({msg:"pin mismatch"})
      }
-     await credit_user.update({
-         amountBalance:credit_user.amountBalance + req.body.amount
-     })
-     await req.user.update({
-         amountBalance:req.user.amountBalance-req.body.amount
-     })
+     credit_user.amountBalance=credit_user.amountBalance + req.body.amount
+     credit_user.save()
+     req.user.amountBalance=req.user.amountBalance-req.body.amount
+     req.user.save()
      var transaction = {
          amount:req.body.amount,
          transactionStatus:"success",
@@ -55,21 +53,22 @@ exports.doTransaction = async(req,res) => {
          content:req.body.content,
          userId:req.user.id
      }
-     var newTransaction = await Transaction.create(transaction)
+     var newTransaction = await db.transactions.create(transaction)
   return res.status(200).json({msg:"transaction successfull",newTransaction})
 }
 
 exports.getMyProfile = async(req,res)=>{
-    var user = await User.findByPk(req.user.id)
-    var debited =  await Transaction.findAll({where:{userId:req.user.id}})
-    var credited = await Transaction.findAll({where:{CreditedTo:req.user.accountNumber}})
+    var user = await db.users.findByPk(req.user.id)
+    var debited =  await db.transactions.findAll({where:{userId:req.user.id}})
+    var credited = await db.transactions.findAll({where:{CreditedTo:req.user.accountNumber}})
+firstMail()
     return res.status(200).json({user,debited,credited})
 }
 
 exports.generatePin = async(req,res)=>{
     var secretPin = CryptoJS.AES.encrypt(`${req.body.pin}`, 'secretforpin').toString();
     console.log("secretpin",secretPin)
-    var user = await User.findByPk(req.user.id)
+    var user = await db.users.findByPk(req.user.id)
     await user.update({
         pin:secretPin
     })

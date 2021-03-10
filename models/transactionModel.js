@@ -1,29 +1,31 @@
-const Sequelize = require("sequelize")
-const db = require("../config/db")
+// const Sequelize = require("sequelize")
+// const db = require("../config/db")
+'use strict'
+module.exports = (sequelize,DataTypes)=>{
+    const Transaction = sequelize.define('transactions',{
+        tid:{
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue:DataTypes.UUIDV4
+        },
+        amount:{
+            allowNull:false,
+            type:DataTypes.INTEGER
+        },
+        transactionStatus:{
+     allowNull:false,
+     type: DataTypes.STRING
+        },
+        content:{
+            type: DataTypes.STRING
+        },
+        CreditedTo:{
+            type:DataTypes.BIGINT
+        },
+        debitedFrom:{
+            type:DataTypes.BIGINT
+        }
+    })
+    return Transaction;
+}
 
-const Transaction = db.define('transactions',{
-    tid:{
-        type: Sequelize.DataTypes.UUID,
-        primaryKey: true,
-        defaultValue:Sequelize.UUIDV4
-    },
-    amount:{
-        allowNull:false,
-        type:Sequelize.INTEGER
-    },
-    transactionStatus:{
- allowNull:false,
- type: Sequelize.STRING
-    },
-    content:{
-        type: Sequelize.STRING
-    },
-    CreditedTo:{
-        type:Sequelize.BIGINT
-    },
-    debitedFrom:{
-        type:Sequelize.BIGINT
-    }
-})
-
-module.exports = Transaction 
