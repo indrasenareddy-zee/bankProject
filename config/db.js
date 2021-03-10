@@ -1,6 +1,8 @@
 'use strict'
 const { Sequelize } = require("sequelize")
-const sequelize= new Sequelize('bank','root','password',{
+require('dotenv').config()
+console.log(process.env.PASSWORD)
+const sequelize= new Sequelize(`${process.env.DBNAME}`,`root`,`${process.env.PASSWORD}`,{
     dialect:'mysql'
 })
 

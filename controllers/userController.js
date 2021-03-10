@@ -2,7 +2,7 @@ var jwt = require("jsonwebtoken")
 var bcrypt = require("bcrypt")
 const db = require("../config/db")
 const { Op } = require("sequelize");
-var firstMail = require("nodemailer")
+var nodeMailer = require("../utils/nodemailer")
 var CryptoJS = require("crypto-js");
 var Transaction = require("../models/transactionModel")
 var User = require("../models/userModel");
@@ -41,10 +41,7 @@ exports.doTransaction = async(req,res) => {
      if(originalText != req.body.pin){
          return res.status(400).json({msg:"pin mismatch"})
      }
-     credit_user.amountBalance=credit_user.amountBalance + req.body.amount
-     credit_user.save()
-     req.user.amountBalance=req.user.amountBalance-req.body.amount
-     req.user.save()
+   
      var transaction = {
          amount:req.body.amount,
          transactionStatus:"success",
@@ -54,6 +51,13 @@ exports.doTransaction = async(req,res) => {
          userId:req.user.id
      }
      var newTransaction = await db.transactions.create(transaction)
+     credit_user.amountBalance=credit_user.amountBalance + req.body.amount
+     credit_user.save()
+     req.user.amountBalance=req.user.amountBalance-req.body.amount
+     req.user.save()
+     nodeMailer.paymentRecieved(credit_user,newTransaction)
+     nodeMailer.paymentSent(req.user,newTransaction)
+
   return res.status(200).json({msg:"transaction successfull",newTransaction})
 }
 
@@ -61,7 +65,6 @@ exports.getMyProfile = async(req,res)=>{
     var user = await db.users.findByPk(req.user.id)
     var debited =  await db.transactions.findAll({where:{userId:req.user.id}})
     var credited = await db.transactions.findAll({where:{CreditedTo:req.user.accountNumber}})
-firstMail()
     return res.status(200).json({user,debited,credited})
 }
 
@@ -96,3 +99,4 @@ var transactions = await Transaction.findAll({
 
 return res.status(200).json({userid:req.user.id,lenght:transactions.length, transactions})
 }
+
