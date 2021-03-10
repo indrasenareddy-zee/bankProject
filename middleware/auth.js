@@ -8,7 +8,6 @@ exports.auth = async(req,res,next)=>{
     }
     const token = req.headers.authorization.split(' ')[1];
     var decoded;
-  console.log(req.headers.refreshtoken)
     var tokenfound = await db.users.findOne({
         where:{
             token:token,
@@ -27,10 +26,7 @@ exports.auth = async(req,res,next)=>{
 
     }
     await jwt.verify(token,"jwtsecret",async (err,resp)=>{
-        console.log(resp)
         if (err){
-            console.log("in")
-            console.log("response",err.name)
             if(err.name == 'TokenExpiredError'){
                 refreshToken = req.headers.refreshtoken
                 await jwt.verify(refreshToken,"jwtsecret",async (err,response)=>{

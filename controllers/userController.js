@@ -101,7 +101,24 @@ return res.status(200).json({userid:req.user.id,lenght:transactions.length, tran
 }
 
 exports.oneToOneTransactions = async(req,res)=>{
-
+    console.log(req.body.accountNumber)
+var transactions = await db.transactions.findAll({
+    where:{
+        [Op.or]:[{
+        [Op.and]:[
+            {CreditedTo:`${req.body.accountNumber}`},
+            {debitedFrom:`${req.user.accountNumber}`}
+        ]},{
+        [Op.and]:[
+            {CreditedTo:`${req.user.accountNumber}`},
+            {debitedFrom:`${req.body.accountNumber}`}
+        ]
+    }]
+    },
+    order:[
+        ['createdAt','DESC']
+    ]
+})
     return res.status(200).json(transactions)
 
     }
