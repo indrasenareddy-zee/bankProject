@@ -100,3 +100,8 @@ var transactions = await Transaction.findAll({
 return res.status(200).json({userid:req.user.id,lenght:transactions.length, transactions})
 }
 
+exports.oneToOneTransactions = async(req,res)=>{
+
+    return res.status(200).json(transactions)
+
+    }

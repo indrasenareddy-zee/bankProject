@@ -11,8 +11,8 @@ var transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // use SSL
     auth: {
-        user: `${process.env.MAILID}`,
-        pass: `${process.env.MAILPASSWORD}`
+        user: process.env.MAILID,
+        pass: process.env.MAILPASSWORD
     }
 });
 
@@ -45,8 +45,8 @@ var paymentSent = async function(data,transaction){
         port: 587,
         secure: false, // use SSL
         auth: {
-            user: 'indrasena.reddy@zee.com',
-            pass: 'Welcome@2021'
+            user: process.env.MAILID,
+            pass: process.env.MAILPASSWORD
         }
     });
     
@@ -73,6 +73,8 @@ var paymentSent = async function(data,transaction){
     
     });
     }
+
+
 module.exports = {
     paymentRecieved,
     paymentSent
