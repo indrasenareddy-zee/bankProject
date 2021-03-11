@@ -4,6 +4,7 @@ var jwt = require("jsonwebtoken")
 var validator = require('validator');
 var errors = require("../errorfiles/errorCodes.json")
 const { Op } = require("sequelize");
+const blogger = require('../config/blogger');
 
 const winston = require('../config/winston')
 

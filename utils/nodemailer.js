@@ -54,7 +54,7 @@ var paymentSent = async function(data,transaction){
     if (err) {
         console.log(err);
     } else {
-        console.log("hrtr")
+        // console.log("hrtr")
         var mainOptions = {
             from: '"Tester" indrasena.reddy@zee.com',
             to: "indrasena1000@gmail.com",
